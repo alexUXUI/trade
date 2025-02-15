@@ -267,7 +267,6 @@ export const TradeCalculator = () => {
                 onChange={value => handleInputChange('sl', value)}
                 placeholder="Enter stop loss price"
               />
-
               <InputField
                 label="Margin"
                 tooltip="The amount of collateral needed to open and maintain your position. This is calculated based on your position size and leverage."
@@ -345,6 +344,12 @@ export const TradeCalculator = () => {
               simulation={simulation}
               maintenanceMargin={inputs.maintenanceMargin}
               liquidationPrice={inputs.liquidationPrice}
+              isLong={inputs.positionSide === 'long'}
+              marginPercent={inputs.marginPercent}
+              leverage={inputs.leverage}
+              price={inputs.price}
+              sl={inputs.sl}
+              riskRewardRatio={riskRewardRatio}
             />
           </div>
         </div>
