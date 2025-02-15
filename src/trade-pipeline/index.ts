@@ -11,6 +11,8 @@ type TradeMetrics = {
   potentialLoss: number;
   riskRewardRatio: number;
   feeImpact: number;
+  tp: number;  // Add this
+  sl: number;  // Add this
   tradeStrength: {
     score: number;
     rating: 'Very Weak' | 'Weak' | 'Moderate' | 'Strong' | 'Very Strong';
@@ -18,28 +20,54 @@ type TradeMetrics = {
   };
 };
 
-const calculatePositionMetrics = (price: number, quantity: number, leverage: number, isLong: boolean) => {
-  const positionSize = price * quantity;
-  return {
-    positionSize,
-    margin: positionSize / leverage,
-    maintenanceMargin: positionSize * 0.005,
-    liquidationPrice: isLong ? price * (1 - 1/leverage) : price * (1 + 1/leverage)
-  };
-};
-
 const calculateRiskMetrics = (price: number, sl: number, tp: number, positionSize: number) => {
-  const stopLossDistance = Math.abs(((price - sl) / price) * 100);
-  const takeProfitDistance = Math.abs(((price - tp) / price) * 100);
-  const potentialLoss = Math.abs(price - sl) * positionSize;
-  const potentialProfit = Math.abs(price - tp) * positionSize;
+  // Handle undefined or zero values
+  if (!price || !positionSize) {
+    return {
+      stopLossDistance: 0,
+      takeProfitDistance: 0,
+      potentialLoss: 0,
+      potentialProfit: 0,
+      riskRewardRatio: 0
+    };
+  }
+
+  const stopLossDistance = sl ? Math.abs(((price - sl) / price) * 100) : 0;
+  const takeProfitDistance = tp ? Math.abs(((price - tp) / price) * 100) : 0;
+  const potentialLoss = sl ? Math.abs(price - sl) * positionSize : 0;
+  const potentialProfit = tp ? Math.abs(price - tp) * positionSize : 0;
   
   return {
     stopLossDistance,
     takeProfitDistance,
     potentialLoss,
     potentialProfit,
-    riskRewardRatio: potentialProfit / potentialLoss
+    riskRewardRatio: potentialLoss ? potentialProfit / potentialLoss : 0
+  };
+};
+
+const calculatePositionMetrics = (price: number, quantity: number, leverage: number, isLong: boolean) => {
+  // Handle all edge cases
+  if (!price || !quantity) {
+    return {
+      positionSize: 0,
+      margin: 0,
+      maintenanceMargin: 0,
+      liquidationPrice: 0
+    };
+  }
+
+  const positionSize = price * quantity;
+  // Always calculate with actual leverage value
+  const liquidationPrice = isLong 
+    ? price * (1 - 1/leverage)
+    : price * (1 + 1/leverage);
+
+  return {
+    positionSize,
+    margin: leverage < 1 ? 0 : positionSize / leverage,
+    maintenanceMargin: leverage < 1 ? 0 : positionSize * 0.005,
+    liquidationPrice: leverage < 1 ? 0 : liquidationPrice
   };
 };
 
@@ -104,10 +132,10 @@ const calculateTradeStrength = (metrics: Partial<TradeMetrics>) => {
   };
 };
 
-export const tradePipeline = (inputs: TradeInputs): TradeMetrics => {
+export const tradePipeline = (inputs: TradeInputs, riskRewardRatio: number = 2): TradeMetrics => {
   const isLong = inputs.positionSide === 'long';
   
-  // Step 1: Position metrics
+  // Calculate base position metrics
   const positionMetrics = calculatePositionMetrics(
     inputs.price,
     inputs.quantity,
@@ -115,31 +143,47 @@ export const tradePipeline = (inputs: TradeInputs): TradeMetrics => {
     isLong
   );
 
-  // Step 2: Risk metrics
+  // Calculate risk amount (10% of entry price)
+  const riskAmount = inputs.price * 0.1;
+  
+  // Calculate TP/SL based on absolute price differences
+  const tp = inputs.tp || (isLong 
+    ? inputs.price + (riskAmount * riskRewardRatio)  // Entry + (Risk * RRR)
+    : inputs.price - (riskAmount * riskRewardRatio)); // Entry - (Risk * RRR)
+  
+  const sl = inputs.sl || (isLong
+    ? inputs.price - riskAmount  // Entry - Risk
+    : inputs.price + riskAmount); // Entry + Risk
+
+  // Recalculate risk metrics even when TP/SL are manually set
   const riskMetrics = calculateRiskMetrics(
     inputs.price,
-    inputs.sl,
-    inputs.tp,
+    sl,
+    tp,
     positionMetrics.positionSize
   );
 
-  // Step 3: Fee impact
+  // Always calculate fee impact based on position size
   const feeImpact = calculateFeeImpact(
     positionMetrics.positionSize,
     inputs.makerFee,
     inputs.takerFee
   );
 
-  // Step 4: Trade strength
+  // Calculate trade strength with all metrics
   const tradeStrength = calculateTradeStrength({
     ...positionMetrics,
     ...riskMetrics,
-    feeImpact
+    feeImpact,
+    tp,
+    sl
   });
 
   return {
     ...positionMetrics,
     ...riskMetrics,
+    tp,
+    sl,
     feeImpact,
     tradeStrength
   };

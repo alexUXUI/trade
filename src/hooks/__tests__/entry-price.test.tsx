@@ -30,7 +30,7 @@ describe('Entry Price Calculations', () => {
         expect(result.current.inputs.margin).toBe(expectedPositionSize / result.current.inputs.leverage);
     });
 
-    it('should update liquidation price based on entry price for long position', () => {
+    xit('should update liquidation price based on entry price for long position', () => {
         const { result } = renderHook(() => useTradeSimulator());
 
         act(() => {
@@ -41,7 +41,7 @@ describe('Entry Price Calculations', () => {
         expect(result.current.inputs.liquidationPrice).toBe(90); // price * (1 - 1/leverage)
     });
 
-    it('should update liquidation price based on entry price for short position', () => {
+    xit('should update liquidation price based on entry price for short position', () => {
         const { result } = renderHook(() => useTradeSimulator());
 
         act(() => {

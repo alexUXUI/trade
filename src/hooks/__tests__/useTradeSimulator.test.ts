@@ -25,7 +25,7 @@ describe('useTradeSimulator', () => {
     expect(result.current.inputs).toEqual({
       price: 0,
       quantity: 0,
-      leverage: 1,
+      leverage: 2,
       margin: 0,
       makerFee: 0.02,
       takerFee: 0.06,
