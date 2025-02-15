@@ -3,36 +3,20 @@ import clsx from 'clsx';
 import { TooltipWrapper } from './TooltipWrapper';
 import { DonutChart } from './Charts';
 import { calculateTradeStrength } from '../../utils/trade-strength';
-import { TradeStrengthAnalysis } from './TradeStrengthAnalysis';
+import { useTrade } from '../../context/TradeContext';
 
-interface SimulationResultsProps {
-  simulation: TradeSimulationResult | null;
-  maintenanceMargin?: number;
-  liquidationPrice?: number;
-  isLong?: boolean;
-  marginPercent?: number;
-  leverage?: number;
-  price?: number;
-  sl?: number;
-  riskRewardRatio?: number;
-}
+export const PositionDetails = () => {
+  const {
+    simulation,
+    inputs: { maintenanceMargin, liquidationPrice, marginPercent, leverage, price, sl },
+    riskRewardRatio
+  } = useTrade();
 
-export const SimulationResults = ({
-  simulation,
-  maintenanceMargin,
-  liquidationPrice,
-  isLong = true,
-  marginPercent = 0,
-  leverage = 1,
-  price = 0,
-  sl = 0,
-  riskRewardRatio = 0
-}: SimulationResultsProps) => {
   const tradeStrength = simulation ? calculateTradeStrength(
     price,
     riskRewardRatio,
     leverage,
-    liquidationPrice || 0,
+    liquidationPrice,
     marginPercent,
     sl,
     simulation['Market Fee'] || simulation['Limit Fee'] || 0,
@@ -40,18 +24,11 @@ export const SimulationResults = ({
   ) : null;
 
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-1">
       <div className="bg-gray-800/30 backdrop-blur-md rounded-xl p-6 border border-gray-700/50">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold">Position Details</h3>
-          {tradeStrength && (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-400">Trade Strength:</span>
-              <span className={`font-medium ${tradeStrength.color}`}>
-                {tradeStrength.label} ({tradeStrength.score})
-              </span>
-            </div>
-          )}
+          <Strength tradeStrength={tradeStrength} />
         </div>
         <div className="space-y-4">
           {/* {!simulation && (
@@ -148,12 +125,19 @@ export const SimulationResults = ({
               </div>
             </div>
           </div>
-
         </div>
       </div>
-      {tradeStrength && (
-        <TradeStrengthAnalysis strength={tradeStrength} />
-      )}
     </div>
   );
 };
+
+const Strength = ({ tradeStrength }: any) => {
+  return tradeStrength ? (
+    <div className="flex items-center gap-2">
+      <span className="text-sm text-gray-400">Trade Strength:</span>
+      <span className={`font-medium ${tradeStrength.color}`}>
+        {tradeStrength.label} ({tradeStrength.score})
+      </span>
+    </div>
+  ) : null
+}
