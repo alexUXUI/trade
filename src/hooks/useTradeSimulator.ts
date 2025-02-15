@@ -106,9 +106,7 @@ export const useTradeSimulator = () => {
           const riskDistance = Math.abs(inputs.sl - inputs.price);
           const profitDistance = Math.abs(numValue - inputs.price);
           if (riskDistance > 0) {
-            const newRatio = isLong ?
-              profitDistance / riskDistance :
-              riskDistance / profitDistance;
+            const newRatio = profitDistance / riskDistance;
             setRiskRewardRatio(newRatio);
           }
         }
@@ -119,9 +117,7 @@ export const useTradeSimulator = () => {
           const profitDistance = Math.abs(inputs.tp - inputs.price);
           const riskDistance = Math.abs(numValue - inputs.price);
           if (riskDistance > 0) {
-            const newRatio = isLong ?
-              profitDistance / riskDistance :
-              riskDistance / profitDistance;
+            const newRatio = profitDistance / riskDistance;
             setRiskRewardRatio(newRatio);
           }
         }

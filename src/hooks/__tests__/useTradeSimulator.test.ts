@@ -1,4 +1,5 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
+import { act } from 'react';
 import { useTradeSimulator } from '../useTradeSimulator';
 import { TradeSimulator } from '../../trade-simulator';
 
