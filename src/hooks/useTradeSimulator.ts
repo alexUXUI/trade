@@ -65,11 +65,13 @@ export const useTradeSimulator = () => {
   
   const handleInputChange = (field: keyof TradeInputs, value: string) => {
     const numValue = parseFloat(value) || 0;
-    const updates: Partial<TradeInputs> = { [field]: numValue };
+    const updates: Partial<TradeInputs> = { 
+        [field]: field === 'price' ? Math.max(0, numValue) : numValue 
+    };
     const isLong = inputs.positionSide === 'long';
 
     switch (field) {
-      case 'leverage':
+        case 'leverage':
         if (numValue > 0 && inputs.price && inputs.quantity) {
           const metrics = calculatePositionMetrics(inputs.price, inputs.quantity, numValue, isLong);
           Object.assign(updates, metrics);
@@ -78,7 +80,7 @@ export const useTradeSimulator = () => {
   
       case 'price':
       case 'quantity':
-        const price = field === 'price' ? numValue : inputs.price;
+        const price = field === 'price' ? Math.max(0, numValue) : inputs.price;
         const quantity = field === 'quantity' ? numValue : inputs.quantity;
   
         if (price && quantity && inputs.leverage > 0) {
