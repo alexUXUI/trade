@@ -1,28 +1,13 @@
 
-import { TradeSimulator } from '../trade-simulator';
+import { TradeSimulationResult, TradeSimulator } from '../trade-simulator';
 import { InputField } from './shared/InputField';
 import { ButtonGroup } from './shared/ButtonGroup';
 import { RangeSlider } from './shared/RangeSlider';
 import { TradeStrengthAnalysis } from './shared/TradeStrengthAnalysis';
 import { PositionDetails } from './shared/PositionDetails';
 import { TradeProvider, useTrade } from '../context/TradeContext';
-
-export interface TradeInputs {
-  price: number;
-  quantity: number;
-  leverage: number;
-  margin: number;
-  makerFee: number;
-  takerFee: number;
-  tp: number;
-  sl: number;
-  orderType: 'market' | 'limit' | 'trigger';
-  positionType: 'isolated' | 'cross';
-  marginPercent: number;
-  maintenanceMargin: number;
-  liquidationPrice: number;
-  positionSide: 'long' | 'short';
-}
+import { TradeInputs } from '../types/trade';
+import { useState, useEffect, useCallback } from 'react';
 
 
 // Change from useSimulator to useTradeSimulator
@@ -46,6 +31,143 @@ export const TradeCalculator = () => {
     </TradeProvider>
   );
 };
+
+const initialInputs: TradeInputs = {
+  price: 0,
+  quantity: 0,
+  leverage: 1,
+  margin: 0,
+  makerFee: 0.02,
+  takerFee: 0.06,
+  tp: 0,
+  sl: 0,
+  orderType: 'market',
+  positionType: 'isolated',
+  marginPercent: 0,
+  maintenanceMargin: 0,
+  liquidationPrice: 0,
+  positionSide: 'long',
+};
+
+export const useTradeSimulator = () => {
+  const [inputs, setInputs] = useState<TradeInputs>(initialInputs);
+  const [simulation, setSimulation] = useState<TradeSimulationResult | null>(null);
+  const [riskRewardRatio, setRiskRewardRatio] = useState<number>(2);
+
+  // Add effect to handle initial calculations
+  useEffect(() => {
+    if (inputs.price > 0) {
+      const isLong = inputs.positionSide === 'long';
+      const riskAmount = inputs.price * 0.1;
+
+      setInputs(prev => ({
+        ...prev,
+        tp: isLong ? inputs.price + (riskAmount * riskRewardRatio) : inputs.price - (riskAmount * riskRewardRatio),
+        sl: isLong ? inputs.price - riskAmount : inputs.price + riskAmount
+      }));
+    }
+  }, [inputs.price, inputs.positionSide, riskRewardRatio]);
+
+  const handleInputChange = useCallback((field: keyof TradeInputs, value: string) => {
+    const numValue = parseFloat(value) || 0;
+    const updates: Partial<TradeInputs> = { [field]: numValue };
+    const isLong = inputs.positionSide === 'long';
+
+    // Calculate position metrics for any field that affects position size
+    if (['price', 'quantity', 'leverage'].includes(field) && numValue > 0) {
+      const price = field === 'price' ? numValue : inputs.price;
+      const quantity = field === 'quantity' ? numValue : inputs.quantity;
+      const leverage = field === 'leverage' ? numValue : inputs.leverage;
+
+      if (price && quantity && leverage) {
+        // Position Size = Entry Price × Quantity
+        const positionSize = price * quantity;
+
+        // Margin = Position Size / Leverage
+        updates.margin = positionSize / leverage;
+
+        // Maintenance Margin = Position Size × Exchange Requirement (0.5%)
+        updates.maintenanceMargin = positionSize * 0.005;
+
+        // Liquidation Price calculation based on position side
+        updates.liquidationPrice = isLong
+          ? price * (1 - 1 / leverage)  // Long: Entry × (1 - 1/Leverage)
+          : price * (1 + 1 / leverage); // Short: Entry × (1 + 1/Leverage)
+
+        // Update TP/SL if price changes
+        if (field === 'price') {
+          const riskAmount = price * 0.1; // 10% risk distance
+          updates.tp = isLong
+            ? price + (riskAmount * riskRewardRatio) // Long: Entry + (Risk × R:R)
+            : price - (riskAmount * riskRewardRatio); // Short: Entry - (Risk × R:R)
+          updates.sl = isLong
+            ? price - riskAmount // Long: Entry - Risk
+            : price + riskAmount; // Short: Entry + Risk
+        }
+      }
+    }
+
+    // Handle TP/SL changes and update Risk/Reward ratio
+    if ((field === 'tp' || field === 'sl') && numValue > 0 && inputs.price) {
+      const profitDistance = Math.abs(field === 'tp' ? numValue - inputs.price : inputs.tp - inputs.price);
+      const riskDistance = Math.abs(field === 'sl' ? numValue - inputs.price : inputs.sl - inputs.price);
+
+      if (riskDistance > 0) {
+        // Risk/Reward Ratio = Potential Profit / Potential Loss
+        const newRatio = isLong
+          ? profitDistance / riskDistance
+          : riskDistance / profitDistance;
+        setRiskRewardRatio(newRatio);
+      }
+    }
+
+    // Handle margin percent changes
+    if (field === 'marginPercent') {
+      const { price, quantity, leverage } = inputs;
+      if (price && quantity && leverage) {
+        // Update margin based on position size and margin percent
+        updates.margin = (price * quantity * numValue) / (100 * leverage);
+      }
+    }
+
+    setInputs(prev => ({ ...prev, ...updates }));
+  }, [inputs, riskRewardRatio]);
+
+  useEffect(() => {
+    if (inputs.price && inputs.quantity) {
+      const simulator = new TradeSimulator(
+        inputs.price,
+        inputs.quantity,
+        inputs.leverage,
+        inputs.margin,
+        inputs.makerFee,
+        inputs.takerFee,
+        inputs.tp || inputs.price * (inputs.positionSide === 'long' ? 1.1 : 0.9),
+        inputs.sl || inputs.price * (inputs.positionSide === 'long' ? 0.9 : 1.1),
+        inputs.orderType
+      );
+      setSimulation(simulator.simulateTrade());
+    }
+  }, [inputs]);
+
+  return {
+    inputs,
+    setInputs,
+    handleInputChange,
+    simulation,
+    riskRewardRatio,
+    setRiskRewardRatio
+  };
+};
+
+// Update OrderForm props typing
+interface OrderFormProps {
+  inputs: TradeInputs;
+  setInputs: React.Dispatch<React.SetStateAction<TradeInputs>>;
+  handleInputChange: (field: keyof TradeInputs, value: string) => void;
+  riskRewardRatio: number;
+  setRiskRewardRatio: React.Dispatch<React.SetStateAction<number>>;
+}
 
 const OrderForm = () => {
   const {
@@ -176,7 +298,7 @@ const OrderForm = () => {
             { value: 'short', label: 'Short' }
           ]}
           value={inputs.positionSide}
-          onChange={value => {
+          onChange={(value: 'long' | 'short') => {
             const isLong = value === 'long';
             const price = inputs.price;
             if (price) {
@@ -199,7 +321,7 @@ const OrderForm = () => {
                 maintenanceMargin,
                 liquidationPrice,
                 margin
-              }) as any);
+              }));
             } else {
               setInputs(prev => ({
                 ...prev,
