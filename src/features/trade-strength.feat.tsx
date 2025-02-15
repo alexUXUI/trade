@@ -1,12 +1,11 @@
-import { useTrade } from '../../context/TradeContext';
-import { calculateTradeStrength } from '../../utils/trade-strength';
-import { TooltipWrapper } from './TooltipWrapper';
+import { useTrade } from '../context/TradeContext';
+import { calculateTradeStrength } from '../utils/trade-strength';
+import { TooltipWrapper } from '../components/shared/TooltipWrapper';
 
 export const TradeStrengthAnalysis = () => {
     const {
         simulation,
-        inputs: { maintenanceMargin, liquidationPrice, marginPercent, leverage, price, sl, tp },
-        riskRewardRatio
+        inputs: { liquidationPrice, marginPercent, leverage, price, sl, tp },
     } = useTrade();
 
     const tradeStrength = simulation ? calculateTradeStrength(

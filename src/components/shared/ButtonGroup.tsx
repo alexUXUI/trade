@@ -10,7 +10,7 @@ interface ButtonGroupProps {
   tooltip: string;
   options: ButtonOption[];
   value: string;
-  onChange: (value: string) => void;
+  onChange: any
 }
 
 export const ButtonGroup = ({
@@ -27,11 +27,10 @@ export const ButtonGroup = ({
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            className={`flex-1 py-2 px-4 rounded-lg transition-all duration-200 ${
-              value === option.value
+            className={`flex-1 py-2 px-4 rounded-lg transition-all duration-200 ${value === option.value
                 ? 'bg-blue-500 text-white'
                 : 'bg-gray-700/30 text-gray-400'
-            }`}
+              }`}
           >
             {option.label}
           </button>
