@@ -89,6 +89,53 @@ const handleInputChange = (
   setInputs(prev => ({ ...prev, ...updates }));
 };
 
+const useRiskRewardEffect = (
+  inputs: TradeInputs,
+  setInputs: React.Dispatch<React.SetStateAction<TradeInputs>>,
+  riskRewardRatio: number
+) => {
+  useEffect(() => {
+    if (inputs.price > 0) {
+      const isLong = inputs.positionSide === 'long';
+      const riskAmount = inputs.price * 0.1;
+      const positionSize = inputs.price * inputs.quantity;
+
+      setInputs(prev => ({
+        ...prev,
+        tp: isLong ? inputs.price + (riskAmount * riskRewardRatio) : inputs.price - (riskAmount * riskRewardRatio),
+        sl: isLong ? inputs.price - riskAmount : inputs.price + riskAmount,
+        maintenanceMargin: positionSize * 0.005,
+        liquidationPrice: isLong 
+          ? inputs.price * (1 - 1 / inputs.leverage)
+          : inputs.price * (1 + 1 / inputs.leverage),
+        margin: positionSize / inputs.leverage
+      }));
+    }
+  }, [riskRewardRatio, inputs.price, inputs.positionSide, inputs.quantity, inputs.leverage, setInputs]);
+};
+
+const useTradeSimulationEffect = (
+  inputs: TradeInputs,
+  setSimulation: React.Dispatch<React.SetStateAction<TradeSimulationResult | null>>
+) => {
+  useEffect(() => {
+    if (inputs.price && inputs.quantity) {
+      const simulator = new TradeSimulator(
+        inputs.price,
+        inputs.quantity,
+        inputs.leverage,
+        inputs.margin,
+        inputs.makerFee,
+        inputs.takerFee,
+        inputs.tp || inputs.price * (inputs.positionSide === 'long' ? 1.1 : 0.9),
+        inputs.sl || inputs.price * (inputs.positionSide === 'long' ? 0.9 : 1.1),
+        inputs.orderType,
+      );
+      setSimulation(simulator.simulateTrade());
+    }
+  }, [inputs]);
+};
+
 export const useTradeSimulator = () => {
   const [inputs, setInputs] = useState<TradeInputs>({
     price: 0,
@@ -109,41 +156,8 @@ export const useTradeSimulator = () => {
   const [simulation, setSimulation] = useState<TradeSimulationResult | null>(null);
   const [riskRewardRatio, setRiskRewardRatio] = useState<number>(2);
 
-  useEffect(() => {
-    if (inputs.price > 0) {
-      const isLong = inputs.positionSide === 'long';
-      const riskAmount = inputs.price * 0.1;
-      const positionSize = inputs.price * inputs.quantity;
-
-      setInputs(prev => ({
-        ...prev,
-        tp: isLong ? inputs.price + (riskAmount * riskRewardRatio) : inputs.price - (riskAmount * riskRewardRatio),
-        sl: isLong ? inputs.price - riskAmount : inputs.price + riskAmount,
-        maintenanceMargin: positionSize * 0.005,
-        liquidationPrice: isLong 
-          ? inputs.price * (1 - 1 / inputs.leverage)
-          : inputs.price * (1 + 1 / inputs.leverage),
-        margin: positionSize / inputs.leverage
-      }));
-    }
-  }, [riskRewardRatio, inputs.price, inputs.positionSide, inputs.quantity, inputs.leverage]);
-
-  useEffect(() => {
-    if (inputs.price && inputs.quantity) {
-      const simulator = new TradeSimulator(
-        inputs.price,
-        inputs.quantity,
-        inputs.leverage,
-        inputs.margin,
-        inputs.makerFee,
-        inputs.takerFee,
-        inputs.tp || inputs.price * (inputs.positionSide === 'long' ? 1.1 : 0.9),
-        inputs.sl || inputs.price * (inputs.positionSide === 'long' ? 0.9 : 1.1),
-        inputs.orderType,
-      );
-      setSimulation(simulator.simulateTrade());
-    }
-  }, [inputs]);
+  useRiskRewardEffect(inputs, setInputs, riskRewardRatio);
+  useTradeSimulationEffect(inputs, setSimulation);
 
   return {
     inputs,
