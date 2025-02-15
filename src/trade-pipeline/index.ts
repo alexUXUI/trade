@@ -20,31 +20,7 @@ type TradeMetrics = {
   };
 };
 
-const calculateRiskMetrics = (price: number, sl: number, tp: number, positionSize: number) => {
-  // Handle undefined or zero values
-  if (!price || !positionSize) {
-    return {
-      stopLossDistance: 0,
-      takeProfitDistance: 0,
-      potentialLoss: 0,
-      potentialProfit: 0,
-      riskRewardRatio: 0
-    };
-  }
 
-  const stopLossDistance = sl ? Math.abs(((price - sl) / price) * 100) : 0;
-  const takeProfitDistance = tp ? Math.abs(((price - tp) / price) * 100) : 0;
-  const potentialLoss = sl ? Math.abs(price - sl) * positionSize : 0;
-  const potentialProfit = tp ? Math.abs(price - tp) * positionSize : 0;
-  
-  return {
-    stopLossDistance,
-    takeProfitDistance,
-    potentialLoss,
-    potentialProfit,
-    riskRewardRatio: potentialLoss ? potentialProfit / potentialLoss : 0
-  };
-};
 
 const calculatePositionMetrics = (price: number, quantity: number, leverage: number, isLong: boolean) => {
   // Handle all edge cases
@@ -134,36 +110,34 @@ const calculateTradeStrength = (metrics: Partial<TradeMetrics>) => {
 
 export const tradePipeline = (inputs: TradeInputs, riskRewardRatio: number = 2): TradeMetrics => {
   const isLong = inputs.positionSide === 'long';
-  
+  const { price, quantity, leverage } = inputs;
+
   // Calculate base position metrics
   const positionMetrics = calculatePositionMetrics(
-    inputs.price,
-    inputs.quantity,
-    inputs.leverage,
+    price,
+    quantity,
+    leverage,
     isLong
   );
 
-  // Calculate risk amount (10% of entry price)
-  const riskAmount = inputs.price * 0.1;
-  
-  // Calculate TP/SL based on absolute price differences
+  // Calculate TP/SL
+  const riskAmount = price * 0.1;
   const tp = inputs.tp || (isLong 
-    ? inputs.price + (riskAmount * riskRewardRatio)  // Entry + (Risk * RRR)
-    : inputs.price - (riskAmount * riskRewardRatio)); // Entry - (Risk * RRR)
-  
+    ? price + (riskAmount * riskRewardRatio)
+    : price - (riskAmount * riskRewardRatio));
   const sl = inputs.sl || (isLong
-    ? inputs.price - riskAmount  // Entry - Risk
-    : inputs.price + riskAmount); // Entry + Risk
+    ? price - riskAmount
+    : price + riskAmount);
 
-  // Recalculate risk metrics even when TP/SL are manually set
-  const riskMetrics = calculateRiskMetrics(
-    inputs.price,
-    sl,
-    tp,
-    positionMetrics.positionSize
-  );
+  // Calculate risk metrics with actual TP/SL values
+  const stopLossDistance = Math.abs(((price - sl) / price) * 100);
+  const takeProfitDistance = Math.abs(((price - tp) / price) * 100);
+  const potentialLoss = Math.abs(price - sl) * positionMetrics.positionSize;
+  const potentialProfit = Math.abs(price - tp) * positionMetrics.positionSize;
+  const actualRiskReward = potentialLoss ? potentialProfit / potentialLoss : 0;
 
-  // Always calculate fee impact based on position size
+
+  // Calculate fee impact
   const feeImpact = calculateFeeImpact(
     positionMetrics.positionSize,
     inputs.makerFee,
@@ -173,7 +147,11 @@ export const tradePipeline = (inputs: TradeInputs, riskRewardRatio: number = 2):
   // Calculate trade strength with all metrics
   const tradeStrength = calculateTradeStrength({
     ...positionMetrics,
-    ...riskMetrics,
+    stopLossDistance,
+    takeProfitDistance,
+    potentialProfit,
+    potentialLoss,
+    riskRewardRatio: actualRiskReward,
     feeImpact,
     tp,
     sl
@@ -181,10 +159,14 @@ export const tradePipeline = (inputs: TradeInputs, riskRewardRatio: number = 2):
 
   return {
     ...positionMetrics,
-    ...riskMetrics,
+    stopLossDistance,
+    takeProfitDistance,
+    potentialProfit,
+    potentialLoss,
+    riskRewardRatio: actualRiskReward,
+    feeImpact,
     tp,
     sl,
-    feeImpact,
-    tradeStrength
+    tradeStrength,
   };
 };
