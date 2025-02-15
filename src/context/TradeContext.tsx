@@ -1,6 +1,7 @@
 import { createContext, useContext, ReactNode } from 'react';
 import { TradeSimulationResult } from '../trade-simulator';
-import { TradeInputs, useTradeSimulator } from '../components/TradeCalculator';
+import { TradeInputs } from '../components/TradeCalculator';
+import { useTradeSimulator } from '../hooks/useTradeSimulator';
 
 interface TradeContextType {
     inputs: TradeInputs;
