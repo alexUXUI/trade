@@ -111,8 +111,8 @@ const calculateTPSLWithRRR = (price: number, isLong: boolean, riskRewardRatio: n
   
   // If both TP and SL are provided, calculate actual RRR
   if (inputTP && inputSL) {
-    const profit = Math.abs(price - inputTP);
-    const loss = Math.abs(price - inputSL);
+    const profit = isLong ? inputTP - price : price - inputTP;
+    const loss = isLong ? price - inputSL : inputSL - price;
     return {
       tp: roundToPrice(inputTP),
       sl: roundToPrice(inputSL),
