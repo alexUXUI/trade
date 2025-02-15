@@ -6,7 +6,7 @@ interface ChartProps {
     showFees?: boolean;
 }
 
-export const DonutChart = ({ data, colors, showFees }: ChartProps) => {
+export const DonutChart = ({ data, colors }: ChartProps) => {
     const hasData = data.some(d => d.value > 0);
 
     return (
