@@ -28,7 +28,7 @@ export const PositionDetails = () => {
       <div className="bg-gray-800/30 backdrop-blur-md rounded-xl p-6 border border-gray-700/50">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-semibold">Position Details</h3>
-          <Strength tradeStrength={tradeStrength} />
+          {/* <Strength tradeStrength={tradeStrength} /> */}
         </div>
         <div className="space-y-4">
           {/* {!simulation && (
