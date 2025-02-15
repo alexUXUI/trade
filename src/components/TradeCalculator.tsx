@@ -73,21 +73,21 @@ const useSimulator = () => {
     if (field === 'price' && numValue > 0) {
       // Immediately calculate TP and SL when price is entered
       const riskAmount = numValue * 0.1; // 10% risk
-      updates.tp = isLong ? 
-        numValue + (riskAmount * riskRewardRatio) : 
+      updates.tp = isLong ?
+        numValue + (riskAmount * riskRewardRatio) :
         numValue - (riskAmount * riskRewardRatio);
-      updates.sl = isLong ? 
-        numValue - riskAmount : 
+      updates.sl = isLong ?
+        numValue - riskAmount :
         numValue + riskAmount;
-        
+
       // Calculate other metrics if quantity exists
       if (inputs.quantity && inputs.leverage > 0) {
         const positionSize = numValue * inputs.quantity;
         updates.margin = positionSize / inputs.leverage;
         updates.maintenanceMargin = positionSize * 0.005;
         updates.liquidationPrice = isLong ?
-          numValue * (1 - 1/inputs.leverage) :
-          numValue * (1 + 1/inputs.leverage);
+          numValue * (1 - 1 / inputs.leverage) :
+          numValue * (1 + 1 / inputs.leverage);
       }
     }
     switch (field) {
@@ -108,16 +108,16 @@ const useSimulator = () => {
           updates.margin = positionSize / inputs.leverage;
           updates.maintenanceMargin = positionSize * 0.005;
           updates.liquidationPrice = isLong ?
-            price * (1 - 1/inputs.leverage) :
-            price * (1 + 1/inputs.leverage);
+            price * (1 - 1 / inputs.leverage) :
+            price * (1 + 1 / inputs.leverage);
 
           if (field === 'price') {
             const riskAmount = price * 0.1;
-            updates.tp = isLong ? 
-              price + (riskAmount * riskRewardRatio) : 
+            updates.tp = isLong ?
+              price + (riskAmount * riskRewardRatio) :
               price - (riskAmount * riskRewardRatio);
-            updates.sl = isLong ? 
-              price - riskAmount : 
+            updates.sl = isLong ?
+              price - riskAmount :
               price + riskAmount;
           }
         }
@@ -133,8 +133,8 @@ const useSimulator = () => {
             field === 'sl' ? numValue - inputs.price : inputs.sl - inputs.price
           );
           if (riskDistance > 0) {
-            const newRatio = isLong ? 
-              profitDistance / riskDistance : 
+            const newRatio = isLong ?
+              profitDistance / riskDistance :
               riskDistance / profitDistance;
             setRiskRewardRatio(newRatio);
           }
@@ -157,7 +157,7 @@ const useSimulator = () => {
         inputs.tp || inputs.price * (inputs.positionSide === 'long' ? 1.1 : 0.9),
         inputs.sl || inputs.price * (inputs.positionSide === 'long' ? 0.9 : 1.1),
         inputs.orderType,
-        inputs.positionSide === 'long'
+        // inputs.positionSide === 'long'
       );
       setSimulation(simulator.simulateTrade());
     }
@@ -315,25 +315,26 @@ export const TradeCalculator = () => {
                   const newSl = isLong ? price - riskAmount : price + riskAmount;
                   const newTp = isLong ? price + (riskAmount * riskRewardRatio) : price - (riskAmount * riskRewardRatio);
 
-                  const metrics = calculatePositionMetrics(
-                    price,
-                    inputs.quantity,
-                    inputs.leverage,
-                    inputs.margin,
-                    isLong
-                  );
+                  const positionSize = price * inputs.quantity;
+                  const maintenanceMargin = positionSize * 0.005;
+                  const liquidationPrice = isLong
+                    ? price * (1 - 1 / inputs.leverage)
+                    : price * (1 + 1 / inputs.leverage);
+                  const margin = positionSize / inputs.leverage;
 
                   setInputs(prev => ({
                     ...prev,
-                    positionSide: value as 'long' | 'short',
+                    positionSide: value,
                     tp: newTp,
                     sl: newSl,
-                    ...metrics
+                    maintenanceMargin,
+                    liquidationPrice,
+                    margin
                   }));
                 } else {
                   setInputs(prev => ({
                     ...prev,
-                    positionSide: value as 'long' | 'short'
+                    positionSide: value
                   }));
                 }
               }}
