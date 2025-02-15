@@ -48,7 +48,6 @@ const useSimulator = () => {
     price: number,
     quantity: number,
     leverage: number,
-    margin: number,
     isLong: boolean
   ) => {
     const positionSize = price * quantity;
@@ -93,7 +92,7 @@ const useSimulator = () => {
     switch (field) {
       case 'leverage':
         if (numValue > 0 && inputs.price && inputs.quantity) {
-          const metrics = calculatePositionMetrics(inputs.price, inputs.quantity, numValue, inputs.margin, isLong);
+          const metrics = calculatePositionMetrics(inputs.price, inputs.quantity, numValue, isLong);
           Object.assign(updates, metrics);
         }
         break;
@@ -329,12 +328,12 @@ export const TradeCalculator = () => {
                     maintenanceMargin,
                     liquidationPrice,
                     margin
-                  }));
+                  }) as any);
                 } else {
                   setInputs(prev => ({
                     ...prev,
                     positionSide: value
-                  }));
+                  }) as any);
                 }
               }}
             />

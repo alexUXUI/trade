@@ -1,6 +1,5 @@
 import { TradeSimulationResult } from '../../trade-simulator';
 import clsx from 'clsx';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { TooltipWrapper } from './TooltipWrapper';
 import { DonutChart } from './Charts';
 import { calculateTradeStrength } from '../../utils/trade-strength';
@@ -18,10 +17,10 @@ interface SimulationResultsProps {
   riskRewardRatio?: number;
 }
 
-export const SimulationResults = ({ 
-  simulation, 
-  maintenanceMargin, 
-  liquidationPrice, 
+export const SimulationResults = ({
+  simulation,
+  maintenanceMargin,
+  liquidationPrice,
   isLong = true,
   marginPercent = 0,
   leverage = 1,
