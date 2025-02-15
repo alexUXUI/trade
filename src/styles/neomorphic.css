@@ -1,0 +1,69 @@
+.neo-inset {
+  background: linear-gradient(145deg, #1f2937, #111827);
+  box-shadow: inset 3px 3px 6px #0f1623,
+              inset -3px -3px 6px #2d3748;
+}
+
+.neo-outset {
+  background: linear-gradient(145deg, #111827, #1f2937);
+  box-shadow: 3px 3px 6px #0f1623,
+             -3px -3px 6px #2d3748;
+}
+
+.neo-button {
+  background: linear-gradient(145deg, #1f2937, #111827);
+  box-shadow: 5px 5px 10px #0f1623,
+             -5px -5px 10px #2d3748;
+  transition: all 0.2s ease;
+}
+
+.neo-button:active {
+  background: linear-gradient(145deg, #111827, #1f2937);
+  box-shadow: inset 5px 5px 10px #0f1623,
+              inset -5px -5px 10px #2d3748;
+}
+
+.neo-pressed {
+  background: linear-gradient(145deg, #111827, #1f2937);
+  box-shadow: inset 2px 2px 5px #0f1623,
+              inset -2px -2px 5px #2d3748;
+}
+
+.neo-stat {
+  background: linear-gradient(145deg, #1f2937, #111827);
+  box-shadow: inset 1px 1px 3px #0f1623,
+              inset -1px -1px 3px #2d3748,
+              2px 2px 4px #0f1623,
+              -2px -2px 4px #2d3748;
+}
+
+.neo-chart {
+  background: linear-gradient(145deg, #1a2433, #1f2937);
+  box-shadow: inset 2px 2px 5px #0f1623,
+              inset -2px -2px 5px #2d3748,
+              3px 3px 6px #0f1623,
+              -3px -3px 6px #2d3748;
+}
+.neo-outset {
+  background: linear-gradient(145deg, #1a1f2b, #1e242f);
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.25),
+              -1px -1px 3px rgba(255, 255, 255, 0.05);
+}
+
+.neo-inset {
+  background: linear-gradient(145deg, #1e242f, #1a1f2b);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.25),
+              inset -1px -1px 2px rgba(255, 255, 255, 0.05);
+}
+
+.neo-pressed {
+  background: linear-gradient(145deg, #1a1f2b, #1e242f);
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.25),
+              inset -1px -1px 2px rgba(255, 255, 255, 0.05);
+}
+
+.neo-stat {
+  background: linear-gradient(145deg, #1e242f, #1a1f2b);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2),
+              inset -1px -1px 2px rgba(255, 255, 255, 0.05);
+}

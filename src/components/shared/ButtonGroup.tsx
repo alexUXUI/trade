@@ -27,9 +27,10 @@ export const ButtonGroup = ({
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            className={`flex-1 py-2 px-4 rounded-lg transition-all duration-200 ${value === option.value
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-700/30 text-gray-400'
+            className={`flex-1 py-3 px-4 rounded-xl transition-all duration-200 
+              ${value === option.value
+                ? 'neo-pressed text-white'
+                : 'neo-outset text-gray-400 hover:neo-pressed'
               }`}
           >
             {option.label}

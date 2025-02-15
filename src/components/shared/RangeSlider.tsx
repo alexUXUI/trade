@@ -24,14 +24,30 @@ export const RangeSlider = ({
 
   return (
     <TooltipWrapper label={label} tooltip={tooltip}>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        value={value}
-        onChange={handleChange}
-        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-      />
+      <div className="neo-inset p-1 rounded-full">
+        <input
+          type="range"
+          min={min}
+          max={max}
+          value={value}
+          onChange={handleChange}
+          className="w-full h-2 appearance-none cursor-pointer bg-transparent
+            [&::-webkit-slider-thumb]:appearance-none
+            [&::-webkit-slider-thumb]:w-5
+            [&::-webkit-slider-thumb]:h-5
+            [&::-webkit-slider-thumb]:rounded-full
+            [&::-webkit-slider-thumb]:neo-outset
+            [&::-webkit-slider-thumb]:bg-gradient-to-br
+            [&::-webkit-slider-thumb]:from-blue-500
+            [&::-webkit-slider-thumb]:to-blue-600
+            [&::-webkit-slider-thumb]:border
+            [&::-webkit-slider-thumb]:border-blue-400/20
+            [&::-webkit-slider-thumb]:shadow-lg
+            [&::-webkit-slider-thumb]:hover:from-blue-400
+            [&::-webkit-slider-thumb]:hover:to-blue-500
+            [&::-webkit-slider-thumb]:active:neo-pressed"
+        />
+      </div>
     </TooltipWrapper>
   );
 };

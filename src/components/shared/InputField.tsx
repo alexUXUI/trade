@@ -28,7 +28,10 @@ export const InputField = ({
         type="number"
         value={value || ''}
         onChange={handleChange}
-        className="w-full bg-gray-700/30 border border-gray-600/50 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+        className="w-full neo-inset text-gray-200 rounded-xl p-3 
+          border border-gray-700/30
+          focus:neo-pressed focus:outline-none
+          transition-all duration-200"
         placeholder={placeholder}
         readOnly={readOnly}
       />

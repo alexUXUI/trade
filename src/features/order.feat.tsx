@@ -1,7 +1,7 @@
 import { ButtonGroup } from "../components/shared/ButtonGroup";
 import { InputField } from "../components/shared/InputField";
 import { RangeSlider } from "../components/shared/RangeSlider";
-import { useTrade } from "../context/TradeContext";
+import { useTrade } from "../state/TradeContext";
 import { TradeSimulator } from "../trade-simulator";
 
 export const Order = () => {
@@ -14,9 +14,9 @@ export const Order = () => {
     } = useTrade();
 
     return (
-        <div className="bg-gray-800/30 backdrop-blur-md rounded-xl p-6 border border-gray-700/50">
-            <h3 className="text-xl font-semibold mb-4">Order</h3>
-            <div className="mt-6 pt-6 border-t border-gray-700/50">
+        <div className="neo-outset rounded-xl p-6 border border-gray-700/10">
+            <h3 className="text-xl font-semibold mb-4 text-gray-200">Order</h3>
+            <div className="mt-6 pt-6 border-t border-gray-700/10">
                 <div className="space-y-4 sm:space-y-6 ">
                     <ButtonGroup
                         label="Order Type"
@@ -35,11 +35,11 @@ export const Order = () => {
                             tooltip="Multiplier that increases your buying power. E.g., 10x leverage means you can open a position 10 times larger than your margin. Higher leverage means higher potential returns but also higher risk."
                             value={inputs.leverage || ''}
                             onChange={value => handleInputChange('leverage', value)}
-                            placeholder="Enter leverage"
+                            placeholder="leverage"
                         />
                         <InputField
                             label="Risk/Reward Ratio"
-                            tooltip="The ratio between your potential profit and risk. Enter the number of reward units for 1 unit of risk. For example, 2 means your take profit is twice the distance from entry as your stop loss."
+                            tooltip="The ratio between your potential profit and risk. the number of reward units for 1 unit of risk. For example, 2 means your take profit is twice the distance from entry as your stop loss."
                             value={riskRewardRatio.toString()}
                             onChange={value => {
                                 const ratio = parseFloat(value)
@@ -64,21 +64,21 @@ export const Order = () => {
                                     }));
                                 }
                             }}
-                            placeholder="Enter reward ratio"
+                            placeholder="reward ratio"
                         />
                         <InputField
                             label="Entry Price"
                             tooltip="The current market price of the asset you want to trade. For market orders, this will be your execution price. For limit orders, this is your desired entry price."
                             value={inputs.price || ''}
                             onChange={value => handleInputChange('price', value)}
-                            placeholder="Enter price"
+                            placeholder="0"
                         />
                         <InputField
                             label="Quantity"
                             tooltip="The number of units of the asset you want to trade. This affects your position size and required margin. Higher quantity means larger position size and higher potential profit/loss."
                             value={inputs.quantity || ''}
                             onChange={value => handleInputChange('quantity', value)}
-                            placeholder="Enter quantity"
+                            placeholder="0"
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -87,21 +87,21 @@ export const Order = () => {
                             tooltip="The price at which you want to take profit. This will be automatically calculated based on your risk/reward ratio but can be manually adjusted."
                             value={inputs.tp || ''}
                             onChange={value => handleInputChange('tp', value)}
-                            placeholder="Enter take profit price"
+                            placeholder="0"
                         />
                         <InputField
                             label="Stop Loss"
                             tooltip="The price at which you want to cut losses. This will be automatically calculated based on your risk/reward ratio but can be manually adjusted."
                             value={inputs.sl || ''}
                             onChange={value => handleInputChange('sl', value)}
-                            placeholder="Enter stop loss price"
+                            placeholder="0"
                         />
                         <InputField
                             label="Margin"
                             tooltip="The amount of collateral needed to open and maintain your position. This is calculated based on your position size and leverage."
                             value={inputs.margin || ''}
                             onChange={value => handleInputChange('margin', value)}
-                            placeholder="margin"
+                            placeholder="0"
                             readOnly
                         />
                     </div>
@@ -169,7 +169,6 @@ export const Order = () => {
                     />
                 </div>
             </div>
-
         </div>
-    )
+    );
 };
