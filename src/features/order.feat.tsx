@@ -1,7 +1,7 @@
 import { ButtonGroup } from "../design-system/ButtonGroup";
 import { InputField } from "../design-system/InputField";
 import { RangeSlider } from "../design-system/RangeSlider";
-import { useTrade } from "../trade-pipeline/TradeContext";
+import { useTrade } from "../application-logic/TradeContext";
 import { TradeSimulator } from "../trade-simulator";
 import { useEffect, useRef, useState } from 'react';
 

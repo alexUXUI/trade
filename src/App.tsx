@@ -1,4 +1,4 @@
-import { TradeProvider } from './trade-pipeline/TradeContext';
+import { TradeProvider } from './application-logic/TradeContext';
 import { AccountProvider } from './account/AccountContext';
 import { HomePage } from './pages/home.page';
 import './design-system/styles/neomorphic.css';

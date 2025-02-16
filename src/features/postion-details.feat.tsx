@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { DonutChart } from '../design-system/Charts';
 import { TooltipWrapper } from '../design-system/TooltipWrapper';
-import { useTrade } from '../trade-pipeline/TradeContext';
+import { useTrade } from '../application-logic/TradeContext';
 
 export const PositionDetails = () => {
     const {

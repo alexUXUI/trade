@@ -1,5 +1,5 @@
-import { useTrade } from '../trade-pipeline/TradeContext';
-import { calculateTradeStrength } from '../trade-pipeline/trade-strength'
+import { useTrade } from '../application-logic/TradeContext';
+import { calculateTradeStrength } from '../business-logic/trade-strength'
 import { TooltipWrapper } from '../design-system/TooltipWrapper';
 
 export const TradeStrengthAnalysis = () => {
