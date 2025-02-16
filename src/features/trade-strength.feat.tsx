@@ -1,4 +1,4 @@
-import { useTrade } from '../state/TradeContext';
+import { useTrade } from '../trade-pipeline/TradeContext';
 import { calculateTradeStrength } from '../trade-pipeline/trade-strength'
 import { TooltipWrapper } from '../design-system/TooltipWrapper';
 

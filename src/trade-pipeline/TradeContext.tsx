@@ -1,6 +1,6 @@
 import { createContext, useContext, ReactNode } from 'react';
 import { TradeContextType } from '../types/trade';
-import { useTradeSimulator } from '../hooks/useTradeSimulator';
+import { useTradeSimulator } from '../business-logic/useTradeSimulator';
 
 const TradeContext = createContext<TradeContextType | null>(null);
 
