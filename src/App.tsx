@@ -1,7 +1,7 @@
 import { TradeProvider } from './trade-pipeline/TradeContext';
 import { AccountProvider } from './account/AccountContext';
 import { HomePage } from './pages/home.page';
-import './styles/neomorphic.css';
+import './design-system/styles/neomorphic.css';
 
 const App = () => {
   return (
