@@ -1,4 +1,4 @@
-import { calculatePositionMetrics } from '../trade.logic';
+import { calculatePositionMetrics } from '../trade';
 
 describe('calculatePositionMetrics', () => {
   it('should calculate metrics correctly for long position', () => {

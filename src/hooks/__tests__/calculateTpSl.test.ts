@@ -1,4 +1,4 @@
-import { calculateTpSl } from '../trade.logic';
+import { calculateTpSl } from '../trade';
 
 describe('calculateTpSl', () => {
   const price = 100;

@@ -1,5 +1,5 @@
 import { TradeInputs } from '../../types/trade';
-import { handlePriceQuantityChange } from '../trade.logic';
+import { handlePriceQuantityChange } from '../trade';
 
 // Mock dependencies
 jest.mock('../trade.logic', () => ({

@@ -26,7 +26,7 @@ export const Order = () => {
         }
 
         timeoutRef.current = setTimeout(() => {
-            originalHandleInputChange(field, value);
+            originalHandleInputChange(field as any, value);
         }, 350);
     };
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAccount } from '../state/AccountContext';
-import { InputField } from './shared/InputField';
+import { useAccount } from './AccountContext';
+import { InputField } from '../components/shared/InputField';
 import { useAuth0 } from '@auth0/auth0-react';
 
 interface AccountModalProps {
@@ -52,7 +52,7 @@ export function AccountModal({ isOpen, onClose }: AccountModalProps) {
                         <InputField
                             label="Total Balance"
                             tooltip="Your total account balance"
-                            value={account?.balance?.totalBalance ?? 0}
+                            value={account?.balance?.totalBalance ?? '0'}
                             onChange={(value) => {
                                 if (!account?.balance) return;
                                 updateBalance({
@@ -62,11 +62,10 @@ export function AccountModal({ isOpen, onClose }: AccountModalProps) {
                             }}
                         />
 
-                        {/* Apply the same pattern to other balance fields */}
                         <InputField
                             label="Available Balance"
                             tooltip="Balance available for trading"
-                            value={account?.balance?.availableBalance ?? 0}
+                            value={account?.balance?.availableBalance ?? '0'}
                             onChange={(value) => {
                                 if (!account?.balance) return;
                                 updateBalance({

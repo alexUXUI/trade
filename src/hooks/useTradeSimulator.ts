@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { TradeSimulationResult } from '../trade-simulator';
 import { TradeInputs } from '../types/trade';
 import { tradePipeline } from '../trade-pipeline';
-import { updateMetrics, simulateTrade, handlePriceQuantityChange, handleLeverageChange, handlePositionSideChange } from './trade.logic';
+import { updateMetrics, simulateTrade, handlePriceQuantityChange, handleLeverageChange, handlePositionSideChange } from './trade';
 
 export const useTradeSimulator = () => {
   const [inputs, setInputs] = useState<TradeInputs>({

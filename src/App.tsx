@@ -1,9 +1,9 @@
 import { TradeStrengthAnalysis } from './features/trade-strength.feat';
 import { TradeProvider } from './state/TradeContext';
-import { AccountProvider } from './state/AccountContext';
+import { AccountProvider } from './account/AccountContext';
 import { Order } from './features/order.feat';
 import { PositionDetails } from './features/postion-details.feat';
-import { UserIcon } from './components/UserIcon';
+import { UserIcon } from './account/UserIcon';
 import './styles/neomorphic.css';
 
 const App = () => {
