@@ -12,7 +12,7 @@ export default defineConfig({
   },
   output: {
     assetPrefix: process.env.NODE_ENV === 'production'
-      ? 'https://trade-4b3.pages.dev/assets/'
+      ? 'https://trade-4b3.pages.dev/'
       : undefined
   },
 });
