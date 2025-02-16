@@ -13,6 +13,6 @@ export default defineConfig({
     open: false
   },
   output: {
-    assetPrefix: isDev ? 'https://trade-4b3.pages.dev/' : ''
+    assetPrefix: isDev ? 'https://trade-4b3.pages.dev/assets/' : ''
   },
 });
