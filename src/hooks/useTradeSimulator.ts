@@ -4,7 +4,6 @@ import { TradeInputs } from '../types/trade';
 import { tradePipeline } from '../trade-pipeline';
 import { updateMetrics, simulateTrade, handlePriceQuantityChange, handleLeverageChange, handlePositionSideChange } from './trade.logic';
 
-
 export const useTradeSimulator = () => {
   const [inputs, setInputs] = useState<TradeInputs>({
     price: 0,
