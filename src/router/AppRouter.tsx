@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthCallback } from '../components/AuthCallback';
+import { AuthCallback } from './AuthCallback';
 import { ProtectedRoute } from './ProtectedRoute';
+import { SignIn } from '../pages/sign-in';
 import App from '../App';
-import { SignIn } from '../pages/SignIn';
 
 export function AppRouter() {
     return (

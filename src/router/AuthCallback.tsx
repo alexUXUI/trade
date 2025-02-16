@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useAccount } from '../account/AccountContext';
 import { useNavigate } from 'react-router-dom';
-import { AnimatedLogo } from './AnimatedLogo';
+import { AnimatedLogo } from '../design-system/AnimatedLogo';
 import { motion } from 'framer-motion';
 
 

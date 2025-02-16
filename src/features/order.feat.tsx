@@ -1,6 +1,6 @@
-import { ButtonGroup } from "../components/shared/ButtonGroup";
-import { InputField } from "../components/shared/InputField";
-import { RangeSlider } from "../components/shared/RangeSlider";
+import { ButtonGroup } from "../design-system/ButtonGroup";
+import { InputField } from "../design-system/InputField";
+import { RangeSlider } from "../design-system/RangeSlider";
 import { useTrade } from "../state/TradeContext";
 import { TradeSimulator } from "../trade-simulator";
 import { useEffect, useRef, useState } from 'react';

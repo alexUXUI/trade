@@ -1,6 +1,6 @@
 import { useTrade } from '../state/TradeContext';
 import { calculateTradeStrength } from '../trade-pipeline/trade-strength'
-import { TooltipWrapper } from '../components/shared/TooltipWrapper';
+import { TooltipWrapper } from '../design-system/TooltipWrapper';
 
 export const TradeStrengthAnalysis = () => {
     const {

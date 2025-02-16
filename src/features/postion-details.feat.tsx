@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { DonutChart } from '../components/shared/Charts';
-import { TooltipWrapper } from '../components/shared/TooltipWrapper';
+import { DonutChart } from '../design-system/Charts';
+import { TooltipWrapper } from '../design-system/TooltipWrapper';
 import { useTrade } from '../state/TradeContext';
 
 export const PositionDetails = () => {

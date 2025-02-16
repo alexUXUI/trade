@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAccount } from './AccountContext';
-import { InputField } from '../components/shared/InputField';
+import { InputField } from '../design-system/InputField';
 import { useAuth0 } from '@auth0/auth0-react';
 
 interface AccountModalProps {
