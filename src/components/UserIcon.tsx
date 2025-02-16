@@ -4,10 +4,15 @@ import { AccountModal } from './AccountModal';
 export function UserIcon() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    console.log('Modal state:', isModalOpen); // Add this to debug
+
     return (
         <>
             <button
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {
+                    console.log('Button clicked'); // Add this to debug
+                    setIsModalOpen(true);
+                }}
                 className="fixed top-4 right-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
                 aria-label="Open account details"
             >

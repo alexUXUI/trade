@@ -23,15 +23,15 @@ export const DonutChart = ({ data, colors }: ChartProps) => {
                 <defs>
                     <linearGradient id="greenGradient" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="rgb(34, 197, 94)" />
-                        <stop offset="100%" stopColor="rgb(134, 239, 172)" />
+                        <stop offset="100%" stopColor="rgb(21, 128, 61)" />
                     </linearGradient>
                     <linearGradient id="redGradient" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="rgb(239, 68, 68)" />
-                        <stop offset="100%" stopColor="rgb(252, 165, 165)" />
+                        <stop offset="100%" stopColor="rgb(185, 28, 28)" />
                     </linearGradient>
                     <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="rgb(59, 130, 246)" />
-                        <stop offset="100%" stopColor="rgb(147, 197, 253)" />
+                        <stop offset="100%" stopColor="rgb(29, 78, 216)" />
                     </linearGradient>
                 </defs>
                 <Pie
@@ -92,8 +92,8 @@ export const DonutChart = ({ data, colors }: ChartProps) => {
                             type: 'circle',
                             id: index,
                             color: entry.name === 'Profit' ? 'rgb(34, 197, 94)' :
-                                                            entry.name === 'Loss' ? 'rgb(239, 68, 68)' :
-                                                                'rgb(59, 130, 246)'
+                                entry.name === 'Loss' ? 'rgb(239, 68, 68)' :
+                                    'rgb(59, 130, 246)'
                         })) : [] as any
                     }
                 />

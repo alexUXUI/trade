@@ -23,18 +23,18 @@ const defaultAccount: UserAccount = {
 };
 
 export function AccountProvider({ children }: { children: React.ReactNode }) {
-    const [account, setAccountState] = useState<UserAccount>(defaultAccount);
+    const [account, setAccountState] = useState<UserAccount | null>(null);
 
-    const setAccount = (newAccount: UserAccount) => {
+    const setAccount = React.useCallback((newAccount: UserAccount) => {
         setAccountState(newAccount);
-    };
+    }, []);
 
-    const updateBalance = (balance: AccountBalance) => {
-        setAccountState(prev => ({
+    const updateBalance = React.useCallback((balance: AccountBalance) => {
+        setAccountState(prev => prev ? {
             ...prev,
             balance
-        }));
-    };
+        } : null);
+    }, []);
 
     return (
         <AccountContext.Provider value={{ account, setAccount, updateBalance }}>

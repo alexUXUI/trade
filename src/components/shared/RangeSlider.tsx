@@ -38,13 +38,13 @@ export const RangeSlider = ({
             [&::-webkit-slider-thumb]:rounded-full
             [&::-webkit-slider-thumb]:neo-outset
             [&::-webkit-slider-thumb]:bg-gradient-to-br
-            [&::-webkit-slider-thumb]:from-blue-500
-            [&::-webkit-slider-thumb]:to-blue-600
+            [&::-webkit-slider-thumb]:from-gray-700
+            [&::-webkit-slider-thumb]:to-gray-800
             [&::-webkit-slider-thumb]:border
-            [&::-webkit-slider-thumb]:border-blue-400/20
+            [&::-webkit-slider-thumb]:border-gray-600/20
             [&::-webkit-slider-thumb]:shadow-lg
-            [&::-webkit-slider-thumb]:hover:from-blue-400
-            [&::-webkit-slider-thumb]:hover:to-blue-500
+            [&::-webkit-slider-thumb]:hover:from-gray-600
+            [&::-webkit-slider-thumb]:hover:to-gray-700
             [&::-webkit-slider-thumb]:active:neo-pressed"
         />
       </div>

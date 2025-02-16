@@ -3,15 +3,43 @@ import { InputField } from "../components/shared/InputField";
 import { RangeSlider } from "../components/shared/RangeSlider";
 import { useTrade } from "../state/TradeContext";
 import { TradeSimulator } from "../trade-simulator";
+import { useEffect, useRef, useState } from 'react';
 
 export const Order = () => {
     const {
         inputs,
         setInputs,
-        handleInputChange,
+        handleInputChange: originalHandleInputChange,
         riskRewardRatio,
         setRiskRewardRatio
     } = useTrade();
+
+    const timeoutRef = useRef<any>(null);
+
+    const handleInputChange = (field: string, value: string) => {
+        // Immediately update the input value in the state
+        setInputs(prev => ({ ...prev, [field]: value }));
+
+        // Debounce the calculations and additional updates
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
+            originalHandleInputChange(field, value);
+        }, 350);
+    };
+
+
+
+    // Then in your InputFields, use localInputs instead of inputs:
+    <InputField
+        label="Entry Price"
+        tooltip="The current market price of the asset you want to trade. For market orders, this will be your execution price. For limit orders, this is your desired entry price."
+        value={inputs.price || ''}
+        onChange={value => handleInputChange('price', value)}
+        placeholder="0"
+    />
 
     return (
         <div className="neo-outset rounded-xl p-6 border border-gray-700/10">

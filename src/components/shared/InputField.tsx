@@ -29,7 +29,7 @@ export const InputField = ({
         value={value || ''}
         onChange={handleChange}
         className="w-full neo-inset text-gray-200 rounded-xl p-3 
-          border border-gray-700/30
+          bg-gray-900/50 border border-gray-700/30
           focus:neo-pressed focus:outline-none
           transition-all duration-200"
         placeholder={placeholder}
