@@ -1,8 +1,6 @@
 import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
 
-const isDev = import.meta.env.MODE === 'development'
-
 export default defineConfig({
   plugins: [pluginReact()],
   html: {
@@ -13,6 +11,8 @@ export default defineConfig({
     open: false
   },
   output: {
-    assetPrefix: isDev ? 'https://trade-4b3.pages.dev/assets/' : ''
+    assetPrefix: process.env.NODE_ENV === 'production'
+      ? 'https://trade-4b3.pages.dev/assets/'
+      : undefined
   },
 });
