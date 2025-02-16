@@ -13,7 +13,7 @@ export const HomePage = () => {
                     <h2 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-8 
                 bg-gradient-to-r from-blue-400 via-purple-400 to-purple-500 
                 bg-clip-text text-transparent">
-                        Trade Calculator
+                        Trade Simulator
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 
                 [&>*]:neo-inset [&>*]:rounded-xl [&>*]:p-4 
